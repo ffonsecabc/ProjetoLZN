@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório Detalhado - UFV LZN GD1 - Cota 0,1 MWac</title>
+  
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-blue: #1a2a3a;
+            --light-gold: #f4e1a1;
+            --text-gray: #ecf0f1;
+        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0d141b; color: var(--text-gray); margin: 0; padding: 40px; }
+        .container { max-width: 1000px; margin: auto; background: var(--dark-blue); border: 1px solid var(--gold); border-radius: 15px; padding: 40px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        h1 { color: var(--gold); text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--gold); padding-bottom: 20px; }
+        h2 { color: var(--gold); border-left: 4px solid var(--gold); padding-left: 15px; margin-top: 40px; font-size: 1.4em; }
+        h3 { color: var(--light-gold); margin-top: 18px; font-size: 1.1em; }
+        p, li { line-height: 1.7; }
+        .grid-tech { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .tech-box { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; text-align: center; }
+        .tech-box span { display: block; font-size: 0.8em; color: var(--gold); text-transform: uppercase; }
+        .tech-box b { font-size: 1.2em; color: white; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(255,255,255,0.05); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.3); vertical-align: top; }
+        th { color: var(--gold); text-transform: uppercase; font-size: 0.9em; }
+        .val-neg { color: #ff7675; }
+        .val-pos { color: #55efc4; font-weight: bold; }
+        .highlight-row { background: rgba(212, 175, 55, 0.15); font-weight: bold; }
+
+        .roi-container { display: flex; justify-content: space-between; gap: 20px; margin-top: 40px; flex-wrap: wrap; }
+        .roi-card { flex: 1; min-width: 240px; background: linear-gradient(145deg, #d4af37, #aa8a2e); color: #1a2a3a; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .roi-card b { display: block; font-size: 2.2em; margin-bottom: 5px; }
+        .roi-card span { font-size: 0.9em; font-weight: bold; text-transform: uppercase; }
+
+        .callout { margin-top: 18px; padding: 16px; border-radius: 10px; border: 1px solid rgba(212,175,55,0.45); background: rgba(212,175,55,0.08); }
+        .callout b { color: var(--light-gold); }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+        .box { border: 1px solid rgba(212,175,55,0.35); border-radius: 10px; padding: 16px; background: rgba(255,255,255,0.03); }
+        .footer-note { margin-top: 30px; font-size: 0.85em; color: #95a5a6; font-style: italic; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px; }
+        @media (max-width: 900px) {
+            .grid-tech { grid-template-columns: repeat(2, 1fr); }
+            .two-col { grid-template-columns: 1fr; }
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+  <h1>Análise de Viabilidade: Cota 0,1 MWac</h1>
+  
+    <div class="grid-tech">
+        <div class="tech-box"><span>Potência AC</span><b>2.200 kW</b></div>
+        <div class="tech-box"><span>Potência DC</span><b>2.750 kWp</b></div>
+        <div class="tech-box"><span>Geração Estimada</span><b>426.525 kWh</b></div>
+        <div class="tech-box"><span>Conexão Prevista</span><b>Junho/2026</b></div>
+    </div>
+
+  <p>Este é o <b>relatório detalhado</b> para investidores PF e PJ, cobrindo operação (SCEE/Rateio), governança, riscos, vantagens de Goiás (ICMS) e enquadramentos GD1/GD2/GD3 (Fio B).</p><p>Além do retorno estimado, este material explica o <b>porquê</b> do retorno e o que protege o capital: estrutura via SPE, segregação por ativo e políticas de aporte com cronograma.</p>
+  
+<h2>0. Escopo e premissas</h2>
+<ul>
+  <li><b>Público:</b> investidores <b>PF e PJ</b> interessados em (i) renda mensal e/ou (ii) <b>autoconsumo remoto</b>.</li>
+  <li><b>Ativo:</b> UFV em <b>Geração Distribuída (GD)</b> em Goiás, operando via <b>SCEE</b> (créditos em kWh).</li>
+  <li><b>Veículo:</b> investidores entram em uma <b>SPE</b>; a SPE será a <b>proprietária dos ativos imobilizados</b> (usina/equipamentos).</li>
+  <li><b>Cota:</b> participação proporcional por <b>0,1 MWac</b> (cada cota = 0,1 MWac).</li>
+  <li><b>Data de referência:</b> 24/12/2025.</li>
+</ul>
+<div class="callout"><b>Objetivo:</b> explicar, em detalhes, como os créditos são comercializados, como o capital retorna, quais riscos são reais, e por que o timing (entrada ainda em 2025) pode ser vantajoso.</div>
+
+<h2>1. O que o investidor compra (sem jargão)</h2>
+<p>O investidor está financiando a construção de uma usina solar que gera energia. Essa energia vira <b>créditos em kWh</b> dentro do <b>SCEE</b>. Esses créditos são então usados de duas formas:</p>
+<div class="two-col">
+  <div class="box">
+    <h3>1) Renda mensal (comercialização para terceiros)</h3>
+    <ul>
+      <li>A administradora monta uma <b>carteira de consumidores</b> (padarias, mercados, clínicas, condomínios etc.).</li>
+      <li>Todo mês a geração é <b>rateada</b> entre esses consumidores.</li>
+      <li>O consórcio cobra um boleto com desconto, e o lucro líquido mensal é repassado <b>proporcionalmente à cota (0,1 MWac)</b>.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>2) Autoconsumo remoto (PF e PJ)</h3>
+    <ul>
+      <li>Em vez de receber repasse em dinheiro, o investidor (ou sua empresa) pode optar por <b>compensar</b> créditos em suas próprias unidades consumidoras elegíveis.</li>
+      <li><b>A empresa líder/administradora</b> executa a distribuição do autoconsumo remoto (rateio), garantindo operação padronizada e auditável.</li>
+      <li>O “retorno” aparece como <b>economia direta</b> na conta de luz.</li>
+    </ul>
+  </div>
+</div>
+<div class="callout"><b>Resumo:</b> é um ativo gerador de caixa (renda mensal) e/ou um ativo de redução de custos (autoconsumo remoto).</div>
+
+<h2>2. Como a comercialização funciona na prática (créditos, rateio e “dois boletos”)</h2>
+<h3>2.1 O que é o crédito de energia</h3>
+<p>Quando a usina gera mais do que consome localmente, o excedente é injetado na rede da distribuidora. Esse excedente é contabilizado como <b>crédito em kWh</b> dentro do SCEE.</p>
+
+<h3>2.2 O rateio mensal (o comando que transforma geração em receita)</h3>
+<p>Mensalmente, a administradora acessa o sistema da distribuidora e informa como dividir a geração entre os consumidores alocados. Exemplo: “A usina gerou 10.000 kWh; alocar 20% para A, 30% para B, 50% para C”.</p>
+<p>Esse rateio é a base operacional para gerar (i) economia para o consumidor e (ii) receita/repasse para o investidor.</p>
+
+<h3>2.3 Por que aparecem dois boletos — e por que isso é bom</h3>
+<ul>
+  <li><b>Boleto da distribuidora (Equatorial):</b> continua existindo, porque a distribuidora mantém rede/fios/qualidade do fornecimento. Após a compensação, tende a ficar próximo do mínimo (taxas e itens não compensáveis).</li>
+  <li><b>Boleto do consórcio/usina:</b> é onde se cobra o “produto” (crédito em kWh) aplicado na conta do cliente, com o desconto contratado.</li>
+</ul>
+<div class="callout"><b>Leitura de investidor:</b> a conta do cliente vira “split”: a distribuidora mantém a infraestrutura e o consórcio captura a margem pela energia gerada/compensada.</div>
+
+<h2>3. SCEE: o “cartório” do modelo (por que isso dá lastro)</h2>
+<p><b>SCEE</b> é o <b>Sistema de Compensação de Energia Elétrica</b>. Ele é o mecanismo regulatório que transforma energia gerada em <b>créditos de kWh</b> e permite que esses créditos abatam consumo futuro.</p>
+<p>Do ponto de vista de segurança, o SCEE é importante porque:</p>
+<ul>
+  <li><b>Registrabilidade:</b> créditos, saldos e compensações aparecem em faturas e sistemas oficiais.</li>
+  <li><b>Auditabilidade:</b> é possível conciliar geração (medidor da usina), alocação (rateio) e abatimento (faturas dos consumidores).</li>
+  <li><b>Prova operacional:</b> a fatura da distribuidora funciona como evidência documental do crédito entregue/compensado.</li>
+</ul>
+<div class="callout"><b>Tradução:</b> não é “promessa” de economia; existe trilha documental formal para comprovar entrega e saldo de créditos.</div>
+
+<h2>4. Governança: por que “1 Usina = 1 CNPJ = 1 Carteira” é vital</h2>
+<p>Para investidores, o maior erro operacional é misturar créditos/receitas de várias usinas em uma mesma carteira sem rastreabilidade. A recomendação de governança é:</p>
+<ul>
+  <li><b>1 usina</b> (ativo físico) = <b>1 CNPJ/veículo</b> (consórcio/SPE) = <b>1 carteira dedicada</b> (clientes alocados).</li>
+</ul>
+<p>Isso melhora:</p>
+<ul>
+  <li><b>DRE por ativo:</b> receita e custos ficam isolados, com prestação de contas simples.</li>
+  <li><b>Auditoria de créditos:</b> sobra de crédito vira “estoque” no CNPJ daquela usina, fácil de medir.</li>
+  <li><b>Valuation e venda:</b> se amanhã vender a usina, vende também a carteira vinculada, sem confusão de origem de receita.</li>
+</ul>
+<div class="callout"><b>Para o investidor:</b> governança não é detalhe; é a diferença entre um ativo financiável e um projeto “artesanal”.</div>
+
+<h2>5. GC vs GD e a preocupação do momento: curtailment</h2>
+<h3>5.1 O que é curtailment</h3>
+<p>Curtailment é o <b>corte forçado de geração</b>: a usina tem sol/vento e capacidade de gerar, mas é obrigada a reduzir injeção por restrição de rede, excesso de oferta ou segurança do sistema.</p>
+
+<h3>5.2 Por que curtailment é tema de GC (geração centralizada)</h3>
+<p>Em <b>Geração Centralizada (GC)</b>, a usina injeta no sistema de transmissão e depende de capacidade de escoamento e regras operativas do sistema interligado. O curtailment surge quando a rede não absorve ou quando há restrições operativas.</p>
+
+<h3>5.3 Por que isso não é o risco dominante em GD (este projeto)</h3>
+<p>Em <b>Geração Distribuída (GD)</b>, o modelo é lastreado pelo <b>SCEE</b> e pelo consumo de uma carteira local. O risco dominante deixa de ser “despacho do sistema” e vira <b>gestão comercial</b>: manter carteira, reduzir inadimplência, evitar migração para ACL sem controle etc.</p>
+
+<div class="callout"><b>Resumo direto:</b> curtailment é um risco sistêmico típico de GC. Em GD, a disciplina é comercial e contratual.</div>
+
+<h2>6. GD1, GD2 e GD3: diferenças, vantagem competitiva e o “Fio B”</h2>
+<p>O Marco Legal da GD (Lei 14.300/2022) criou uma transição de cobrança da componente de uso da rede de distribuição conhecida como <b>TUSD Fio B</b>. Essa cobrança é o principal divisor de águas entre “entrar cedo” e “entrar tarde”.</p>
+
+<h3>6.1 O que é o Fio B</h3>
+<p>O Fio B é, em termos simples, a parte da tarifa que remunera o uso da rede da distribuidora (operação, manutenção e investimento na rede local). Em GD, discute-se quanto dessa componente pode ou não ser compensada via créditos.</p>
+
+<h3>6.2 GD1 (direito adquirido / melhores condições)</h3>
+<p>Em termos práticos, <b>GD1</b> é o grupo com as condições mais vantajosas (direito adquirido). Quem se enquadra nessa regra mantém a compensação mais próxima do modelo antigo, com proteção de longo prazo.</p>
+<ul>
+  <li><b>Até quando vai a proteção:</b> quem tinha sistema instalado ou pedido/protocolo dentro da janela de direito adquirido fica com as condições protegidas <b>até 31/12/2045</b>.</li>
+  <li><b>Implicação financeira:</b> maior previsibilidade de margem e maior atratividade econômica para carteira de clientes.</li>
+</ul>
+
+<h3>6.3 GD2 e GD3 (transição e modelo definitivo)</h3>
+<p>Para conexões/protocolos posteriores, a cobrança do Fio B entra de forma <b>gradual</b>. Em linhas gerais, a transição aumenta o percentual cobrado até chegar ao modelo definitivo.</p>
+<ul>
+  <li>Exemplo de escalada divulgada na indústria e em análises setoriais: <b>15% (2023), 30% (2024), 45% (2025), 60% (2026), 75% (2027), 90% (2028)</b>, chegando a <b>100% após o término da transição</b>.</li>
+  <li><b>Leitura de investidor:</b> quanto mais tarde no regime definitivo, menor tende a ser a “mágica” do desconto — o projeto precisa ser mais eficiente/maior escala para manter a mesma margem.</li>
+</ul>
+
+<div class="callout"><b>Por que entrar cedo importa:</b> projetos enquadrados em regimes mais favoráveis seguram margem por mais tempo. Isso aparece no preço de venda do crédito, na capacidade de ofertar desconto e no payback.</div>
+
+<h2>7. Goiás: vantagem estrutural (ICMS sobre energia compensada)</h2>
+<p>Além do enquadramento regulatório nacional, Goiás adiciona uma vantagem local relevante: a <b>não incidência de ICMS</b> sobre energia elétrica compensada no SCEE, conforme decisões e posicionamentos que afastaram a cobrança por entender que compensação não se caracteriza como operação mercantil típica.</p>
+<p><b>Efeito direto no projeto:</b></p>
+<ul>
+  <li><b>Mais competitividade:</b> é possível ofertar desconto forte ao cliente sem “perder” margem no imposto.</li>
+  <li><b>Carteira enche mais rápido:</b> quando o cliente sente economia líquida maior, adesão tende a ser mais fácil.</li>
+  <li><b>Retorno líquido melhora:</b> menos tributação na ponta do crédito = mais caixa operacional.</li>
+</ul>
+<div class="callout"><b>Leitura de investidor:</b> Goiás reduz atrito fiscal sobre a compensação e melhora o “spread” do crédito, aumentando a resiliência do modelo.</div>
+
+<h2>8. Upside futuro: baterias, sazonalidade e horário de ponta</h2>
+<p>O ROI base deste material considera o modelo atual (SCEE + carteira). Entretanto, existe uma opcionalidade tecnológica para o futuro: <b>armazenamento em baterias</b>.</p>
+<p>Se o setor evoluir para sinalização mais forte de preço por horário (energia valendo mais no pico e menos fora do pico), baterias permitem:</p>
+<ul>
+  <li><b>Armazenar</b> a energia gerada em horários de alta produção solar.</li>
+  <li><b>Deslocar</b> o consumo/uso do crédito para horários mais caros.</li>
+  <li><b>Arbitragem horária</b>: capturar maior valor por kWh efetivo.</li>
+</ul>
+<div class="callout"><b>Importante:</b> baterias são <b>upgrade opcional</b>. O projeto não depende delas para funcionar; elas podem aumentar margem no futuro se a regulação e tarifas criarem esse incentivo.</div>
+
+<h2>9. Estrutura societária: SPE como dona dos ativos imobilizados</h2>
+<p>O investidor que adquire cotas passa a integrar uma <b>SPE</b>. A SPE será a <b>proprietária dos ativos imobilizados</b> (painéis, inversores, estruturas, conexões e demais componentes da usina).</p>
+<p><b>Por que isso é bom:</b></p>
+<ul>
+  <li><b>Segregação patrimonial:</b> o ativo fica dentro de um veículo específico, com contabilidade e rastreabilidade próprias.</li>
+  <li><b>Governança:</b> facilita prestação de contas por ativo, auditoria e eventual venda/entrada de novos sócios.</li>
+  <li><b>Financiabilidade:</b> SPE com ativo imobilizado claro costuma ser mais “bancável” do que estrutura informal.</li>
+</ul>
+
+<h2>10. Forma de aporte: CAPEX direto, cronograma e despesas do dia a dia</h2>
+<h3>10.1 CAPEX: pagamento direto a fornecedores</h3>
+<p>O investidor pode executar parte relevante do aporte via <b>pagamentos diretos</b> a fornecedores (equipamentos, EPC, serviços), o que reduz risco de caixa e aumenta transparência.</p>
+
+<h3>10.2 Aporte não precisa ser “tudo de uma vez”</h3>
+<p>O investimento pode seguir um <b>cronograma de pagamentos</b>, compatível com o avanço da obra, necessidades de compras do momento e marcos de entrega (compra de equipamento, mobilização, montagem, comissionamento, conexão etc.).</p>
+
+<h3>10.3 Despesas operacionais e de obra (dia a dia)</h3>
+<p>Algumas despesas precisam ser pagas por uma conta operacional (administradora da obra): taxas, licenças, fornecedores, logística, deslocamentos, pequenos serviços, materiais complementares e contingências.</p>
+
+<div class="callout"><b>Boa prática:</b> separar “CAPEX imobilizado” (pago direto quando possível) de “OPEX/implantação” (caixa operacional) com conciliação mensal por SPE/usina.</div>
+
+<h2>11. Política comercial de entrada: preço da cota e reajustes</h2>
+<p>Para alinhar o projeto ao ciclo de custos e ao avanço para 2026, aplica-se uma política comercial de entrada:</p>
+<ul>
+  <li><b>Preço base de referência (cota 0,1 MWac):</b> R$ 400.000,00.</li>
+  <li><b>Entrada ainda em 2025 com aporte único:</b> possibilidade de reduzir para <b>R$ 380.000,00</b>, pois alguns custos tendem a subir em <b>jan/2026</b>.</li>
+  <li><b>Reajuste mensal para entrada em jan/2026 ou fev/2026:</b> o valor da cota sofre <b>reajuste</b> (ou seja, não permanece em R$ 400.000,00), refletindo aumento de custos no período.</li>
+</ul>
+<div class="callout"><b>Por que “entrar este ano” importa:</b> além de preço, o timing influencia enquadramento/regime, fila de conexão, cronograma de obra e capacidade de travar carteira e margens com mais previsibilidade.</div>
+
+<h2>12. Por que faz sentido fechar ainda em 2025</h2>
+<p>Existem quatro razões pragmáticas para acelerar decisão e assinatura ainda em 2025:</p>
+<ol>
+  <li><b>Custos:</b> alguns insumos/serviços e custos indiretos tendem a reajustar em janeiro. Fechar em 2025 pode capturar melhor preço de entrada (ex.: cota a R$ 380 mil no aporte único).</li>
+  <li><b>Fila e cronograma:</b> conexão e implantação têm janelas e prazos; travar cronograma cedo reduz risco de “escorregar” início de geração e, portanto, início de retorno.</li>
+  <li><b>Regime e competitividade:</b> quanto mais cedo no ciclo regulatório, maior tende a ser a capacidade de oferecer desconto forte mantendo margem (especialmente quando se olha o tema Fio B e transição).</li>
+  <li><b>Carteira:</b> travar consumidores cedo e diversificar carteira por usina protege caixa e reduz volatilidade operacional.</li>
+</ol>
+<div class="callout"><b>Nota:</b> o ROI apresentado depende da data de início efetivo de geração (conexão + ciclos de faturamento). Quanto mais o cronograma escorrega, mais “carência” existe antes do repasse.</div>
+
+  
+    <h2>13. Memória de Cálculo Operacional (por kWh)</h2>
+    <table>
+        <thead>
+            <tr><th>Descrição do Item</th><th>Valor Unitário</th><th>Natureza</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Valor de Venda do Crédito</td><td>R$ 0,80</td><td>Receita Bruta</td></tr>
+            <tr><td>Taxa O&M (Operação e Manutenção)</td><td class="val-neg">9%</td><td>Custo Variável</td></tr>
+            <tr><td>Seguros e Sistemas de Monitoramento</td><td class="val-neg">4%</td><td>Custo Fixo/Segurança</td></tr>
+            <tr><td>Taxa Comercial e Gestão</td><td class="val-neg">8%</td><td>Comercialização</td></tr>
+            <tr class="highlight-row"><td>Margem Operacional Líquida (kWh bruto)</td><td class="val-pos">R$ 0,47 / kWh</td><td>Resultado de Caixa</td></tr>
+        </tbody>
+    </table>
+
+  
+    <h2>14. Demonstrativo Mensal de Resultados (Planta 2,2 MWac)</h2>
+    <table>
+        <tr><td>Faturamento Bruto Mensal (Est. 426.525 kWh)</td><td class="val-pos">R$ 341.220,00</td></tr>
+        <tr><td>Despesa de Demanda (TUSD/Concessionária)</td><td class="val-neg">- R$ 32.692,00</td></tr>
+        <tr><td>Impostos sobre Operação (pior cenário 2026)</td><td class="val-neg">- R$ 36.297,60</td></tr>
+        <tr><td>Custos de Gestão (O&M, Seguros, Comercial)</td><td class="val-neg">- R$ 65.684,85</td></tr>
+        <tr><td>Arrendamento de Solo (Fixo)</td><td class="val-neg">- R$ 7.500,00</td></tr>
+        <tr class="highlight-row"><td>LUCRO LÍQUIDO MENSAL DA PLANTA</td><td class="val-pos">R$ 199.045,55</td></tr>
+    </table>
+
+  
+    <h2>15. Dinâmica do Investimento (Cota 0,1 MWac)</h2>
+    <p>Premissa ilustrativa: aporte em <b>Dez/2025</b> e primeiro retorno efetivo em <b>Nov/2026</b> (carência estimada por obra + conexão + ciclo de faturamento).</p>
+    <table>
+        <tr><td>Base de referência (exemplo do demonstrativo)</td><td>R$ 400.000,00</td></tr>
+        <tr><td>Custo de Oportunidade (1,5% a.m. × 8 meses)</td><td class="val-neg">R$ 48.000,00</td></tr>
+        <tr><td>Base de Investimento Efetiva (Capital + Tempo)</td><td>R$ 448.000,00</td></tr>
+        <tr><td>Valorização Patrimonial Estimada (Jun/2026)</td><td class="val-pos">R$ 567.400,00</td></tr>
+    </table>
+    <div class="callout"><b>Nota comercial:</b> para entrada com aporte único ainda em 2025, pode-se aplicar valor de cota <b>R$ 380.000,00</b>. Para entrada em 2026, aplica-se reajuste mensal (jan/fev etc.).</div>
+
+  
+    <div class="roi-container">
+        <div class="roi-card">
+            <span>Repasse Mensal</span>
+            <b>R$ 9.047,52</b>
+            <small>Proporcional à cota (0,1 MWac)</small>
+        </div>
+        <div class="roi-card">
+            <span>ROI Mensal</span>
+            <b>2,02%</b>
+            <small>Exemplo do demonstrativo</small>
+        </div>
+        <div class="roi-card">
+            <span>ROI Anual</span>
+            <b>24,24%</b>
+            <small>Exemplo do demonstrativo</small>
+        </div>
+    </div>
+
+  
+<h2>16. Matriz de risco (visão executiva)</h2>
+<table>
+  <thead><tr><th>Categoria</th><th>Risco</th><th>Mitigação</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><b>Sistêmico</b></td>
+      <td>Curtailment (GC)</td>
+      <td>Projeto é <b>GD</b> via SCEE; risco dominante é carteira/contrato.</td>
+    </tr>
+    <tr>
+      <td><b>Regulatório</b></td>
+      <td>Transição Fio B (GD2/GD3)</td>
+      <td>Priorizar enquadramentos mais favoráveis, eficiência operacional e preço/contratos compatíveis.</td>
+    </tr>
+    <tr>
+      <td><b>Fiscal</b></td>
+      <td>Tributação sobre compensação</td>
+      <td>Em Goiás, entendimento/decisões afastando ICMS sobre energia compensada melhora spread.</td>
+    </tr>
+    <tr>
+      <td><b>Comercial</b></td>
+      <td>Inadimplência e churn</td>
+      <td>Carteira diversificada, regras de pontualidade e instrumentos de cobrança (escada/estoque/execução).</td>
+    </tr>
+    <tr>
+      <td><b>Mercado</b></td>
+      <td>Migração para ACL</td>
+      <td>Cláusulas de bloqueio/vencimento antecipado enquanto houver estoque/obrigações.</td>
+    </tr>
+  </tbody>
+</table>
+
+  
+<div class="footer-note">
+  <strong>Notas:</strong><br>
+  • Este documento amplia, em linguagem de investidor, as premissas do modelo (GD/SCEE, governança, riscos e política comercial).<br>
+  • Prazos e enquadramentos dependem de etapas formais com distribuidora e marcos regulatórios aplicáveis ao caso concreto.<br>
+  • Recomenda-se que o material jurídico (contrato, SPE, governança e política de aportes) reflita exatamente a operação descrita.
+</div>
+
+
+
+
+<h2>17. Modelo corrigido de inflação e reajuste (sem crescimento mensal)</h2>
+<p><b>Correção de premissa:</b> o reajuste de tarifa de energia é aplicado <b>anualmente</b> (ex.: ciclo de reajuste em outubro, com reflexo no faturamento a partir de dezembro). Portanto, o modelo de retorno <b>não</b> aplica crescimento mensal do repasse.</p>
+
+<div class="two-col">
+  <div class="box">
+    <h3>Premissas usadas neste bloco</h3>
+    <ul>
+      <li><b>Inflação anual:</b> 7% a.a.</li>
+      <li><b>Reajuste anual de energia:</b> 18% a.a.</li>
+      <li><b>Reajuste real anual do fluxo:</b> (1,18 / 1,07 − 1) = <b>10,28% a.a.</b></li>
+      <li><b>Aplicação:</b> 1x ao ano, a partir de <b>Dezembro</b> (mês 20, 32, 44...)</li>
+      <li><b>Base econômica:</b> R$ 425.600,00 (R$ 380.000,00 + custo de oportunidade de implantação)</li>
+      <li><b>Repasse inicial:</b> R$ 9.047,52/mês</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>Conclusão executiva</h3>
+    <ul>
+      <li><b>Payback real</b> (com inflação + reajuste anual e custo de oportunidade): <b>49 meses</b>.</li>
+      <li>O retorno acumulado é apresentado em <b>valores reais</b> (poder de compra), evitando “ilusão” nominal.</li>
+      <li>O retorno acumulado abaixo considera que o <b>primeiro mês de retorno financeiro é o mês 8</b> (carência/implantação antes disso).</li>
+    </ul>
+  </div>
+</div>
+
+
+<h3 style="margin-top:14px">Tabela progressiva (real) até o payback</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Mês</th>
+      <th style="text-align:right">Repasse Mensal (R$)</th>
+      <th style="text-align:right">Retorno Acumulado (R$)</th>
+      <th style="text-align:right">% da Base</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>8</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>2.13%</td></tr><tr><td>9</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 18.095,04</td><td style='text-align:right'>4.25%</td></tr><tr><td>10</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 27.142,56</td><td style='text-align:right'>6.38%</td></tr><tr><td>11</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 36.190,08</td><td style='text-align:right'>8.50%</td></tr><tr><td>12</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 45.237,60</td><td style='text-align:right'>10.63%</td></tr><tr><td>13</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 54.285,12</td><td style='text-align:right'>12.75%</td></tr><tr><td>14</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 63.332,64</td><td style='text-align:right'>14.88%</td></tr><tr><td>15</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 72.380,16</td><td style='text-align:right'>17.01%</td></tr><tr><td>16</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 81.427,68</td><td style='text-align:right'>19.13%</td></tr><tr><td>17</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 90.475,20</td><td style='text-align:right'>21.26%</td></tr><tr><td>18</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 99.522,72</td><td style='text-align:right'>23.38%</td></tr><tr><td>19</td><td style='text-align:right'>R$ 9.047,52</td><td style='text-align:right'>R$ 108.570,24</td><td style='text-align:right'>25.51%</td></tr><tr><td>20</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 118.547,88</td><td style='text-align:right'>27.85%</td></tr><tr><td>21</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 128.525,52</td><td style='text-align:right'>30.20%</td></tr><tr><td>22</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 138.503,16</td><td style='text-align:right'>32.54%</td></tr><tr><td>23</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 148.480,80</td><td style='text-align:right'>34.89%</td></tr><tr><td>24</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 158.458,43</td><td style='text-align:right'>37.23%</td></tr><tr><td>25</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 168.436,07</td><td style='text-align:right'>39.58%</td></tr><tr><td>26</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 178.413,71</td><td style='text-align:right'>41.92%</td></tr><tr><td>27</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 188.391,35</td><td style='text-align:right'>44.26%</td></tr><tr><td>28</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 198.368,99</td><td style='text-align:right'>46.61%</td></tr><tr><td>29</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 208.346,63</td><td style='text-align:right'>48.95%</td></tr><tr><td>30</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 218.324,27</td><td style='text-align:right'>51.30%</td></tr><tr><td>31</td><td style='text-align:right'>R$ 9.977,64</td><td style='text-align:right'>R$ 228.301,91</td><td style='text-align:right'>53.64%</td></tr><tr><td>32</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 239.305,28</td><td style='text-align:right'>56.23%</td></tr><tr><td>33</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 250.308,66</td><td style='text-align:right'>58.81%</td></tr><tr><td>34</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 261.312,04</td><td style='text-align:right'>61.40%</td></tr><tr><td>35</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 272.315,42</td><td style='text-align:right'>63.98%</td></tr><tr><td>36</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 283.318,79</td><td style='text-align:right'>66.57%</td></tr><tr><td>37</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 294.322,17</td><td style='text-align:right'>69.15%</td></tr><tr><td>38</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 305.325,55</td><td style='text-align:right'>71.74%</td></tr><tr><td>39</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 316.328,93</td><td style='text-align:right'>74.33%</td></tr><tr><td>40</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 327.332,30</td><td style='text-align:right'>76.91%</td></tr><tr><td>41</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 338.335,68</td><td style='text-align:right'>79.50%</td></tr><tr><td>42</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 349.339,06</td><td style='text-align:right'>82.08%</td></tr><tr><td>43</td><td style='text-align:right'>R$ 11.003,38</td><td style='text-align:right'>R$ 360.342,44</td><td style='text-align:right'>84.67%</td></tr><tr><td>44</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 372.477,00</td><td style='text-align:right'>87.52%</td></tr><tr><td>45</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 384.611,57</td><td style='text-align:right'>90.37%</td></tr><tr><td>46</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 396.746,13</td><td style='text-align:right'>93.22%</td></tr><tr><td>47</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 408.880,70</td><td style='text-align:right'>96.07%</td></tr><tr><td>48</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 421.015,26</td><td style='text-align:right'>98.92%</td></tr><tr><td>49</td><td style='text-align:right'>R$ 12.134,57</td><td style='text-align:right'>R$ 433.149,83</td><td style='text-align:right'>101.77%</td></tr>
+    <tr class="highlight-row"><td colspan="4">Payback real: <b>49 meses</b> (base econômica R$ 425.600, reajuste anual real 10,28% aplicado a partir de Dezembro)</td></tr>
+  </tbody>
+</table>
+
+
+<h2>18. Nota para comitê: energia como hedge de inflação</h2>
+
+<p><b>Por que energia historicamente cresce acima da inflação no Brasil (visão de investidor institucional):</b>
+A tarifa de energia elétrica no Brasil tende a superar a inflação por refletir um conjunto de custos e mecanismos de reajuste que não seguem o mesmo comportamento do índice geral de preços.
+O setor é intensivo em CAPEX e depende de investimentos recorrentes em rede (distribuição/transmissão) e reposição de ativos; além disso, parte relevante dos insumos e equipamentos é indexada a câmbio e commodities.
+Na prática, os processos tarifários incorporam componentes de custo estrutural (expansão, perdas, qualidade, encargos setoriais, contratação de energia e, em certos ciclos, térmicas e efeitos hidrológicos),
+o que cria uma pressão de longo prazo para que o kWh mantenha poder de compra real e, em vários períodos, avance acima do IPCA.
+Para o investidor, isso se traduz em um ativo cujo fluxo tem maior probabilidade de preservar valor real ao longo do tempo, especialmente quando o produto final está ligado a uma despesa essencial e recorrente do consumidor.</p>
+
+
+
+
+<h2>19. Curva S real de CAPEX (cronograma financeiro da obra)</h2>
+<p>Para complementar a leitura de risco e cronograma, abaixo está a <b>Curva S financeira</b> (CAPEX) e o <b>desembolso mensal</b> conforme o cronograma consolidado. Isso ajuda a visualizar a necessidade real de caixa ao longo da obra e a compatibilizar com o cronograma de aportes/pagamentos diretos a fornecedores.</p>
+
+<div class="callout">
+  <b>Diretrizes adicionais (governança e cronograma):</b>
+  <ul>
+    <li><b>Integralização até Fev/2026:</b> os aportes podem acompanhar a Curva S e as demandas de obra, porém as cotas devem estar <b>integralizadas até fevereiro/2026</b> para garantir o fluxo de compras e execução sem surpresas.</li>
+    <li><b>Alinhamento de interesse:</b> a <b>detentora do projeto também é sócia</b> e participa do resultado da comercialização dos créditos. Esta usina <b>não nasceu</b> originalmente como uma “usina para investidores”; a abertura para cotas foi estruturada para acelerar escala e captura de oportunidade mantendo o alinhamento econômico do controlador.</li>
+    <li><b>Janela de entrega (conexão):</b> a <b>Equatorial já finalizou a rede</b> para conexão. A partir disso, o projeto opera com uma janela de <b>150 dias</b> para entregar a obra e obter <b>vistoria aprovada</b>.</li>
+  </ul>
+</div>
+
+
+<div class="callout"><b>Uso prático:</b> o investidor pode casar o cronograma de pagamentos (CAPEX) com marcos de compra e execução, reduzindo o “capital parado”.</div>
+
+<div class="card" style="padding:14px; margin-top:14px">
+  <section style="margin-top:34px">
+  <h2>Curva S financeira (acumulado)</h2>
+  <div class="meta" style="margin-top:6px">Acumulado mensal baseado nos eventos principais do cronograma financeiro (CAPEX).</div>
+  <div class="card" style="margin-top:10px">
+    <svg width="100%" viewBox="0 0 980 280" style="display:block">
+      <line x1='44' y1='44.0' x2='936' y2='44.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='92.0' x2='936' y2='92.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='140.0' x2='936' y2='140.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='188.0' x2='936' y2='188.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='236.0' x2='936' y2='236.0' stroke='rgba(255,255,255,.08)'/>
+      <polyline fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.4" points="44.0,231.5 171.4,142.3 298.9,98.3 426.3,73.5 553.7,58.8 681.1,52.6 808.6,46.5 936.0,44.0"/>
+      <circle cx='44.0' cy='231.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2025-12: R$ 185.000 (mês R$ 185.000)</title></circle><circle cx='171.4' cy='142.3' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-01: R$ 3.817.500 (mês R$ 3.632.500)</title></circle><circle cx='298.9' cy='98.3' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-02: R$ 5.611.500 (mês R$ 1.794.000)</title></circle><circle cx='426.3' cy='73.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-03: R$ 6.623.300 (mês R$ 1.011.800)</title></circle><circle cx='553.7' cy='58.8' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-04: R$ 7.223.300 (mês R$ 600.000)</title></circle><circle cx='681.1' cy='52.6' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-05: R$ 7.473.300 (mês R$ 250.000)</title></circle><circle cx='808.6' cy='46.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-06: R$ 7.723.300 (mês R$ 250.000)</title></circle><circle cx='936.0' cy='44.0' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-07: R$ 7.825.800 (mês R$ 102.500)</title></circle>
+      <line x1="44" y1="44" x2="44" y2="236" stroke="rgba(255,255,255,.25)"/>
+      <line x1="44" y1="236" x2="936" y2="236" stroke="rgba(255,255,255,.25)"/>
+      <text x='44.0' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>12/2025</text>
+<text x='171.4' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>01/2026</text>
+<text x='298.9' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>02/2026</text>
+<text x='426.3' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>03/2026</text>
+<text x='553.7' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>04/2026</text>
+<text x='681.1' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>05/2026</text>
+<text x='808.6' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>06/2026</text>
+<text x='936.0' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>07/2026</text>
+      <text x='10' y='236.0' font-size='11' fill='rgba(255,255,255,.65)'>0</text>
+<text x='10' y='188.0' font-size='11' fill='rgba(255,255,255,.65)'>1.956.450</text>
+<text x='10' y='140.0' font-size='11' fill='rgba(255,255,255,.65)'>3.912.900</text>
+<text x='10' y='92.0' font-size='11' fill='rgba(255,255,255,.65)'>5.869.350</text>
+<text x='10' y='44.0' font-size='11' fill='rgba(255,255,255,.65)'>7.825.800</text>
+    </svg>
+  </div>
+</section>
+<section style="margin-top:34px">
+  <h2>Desembolso mensal</h2>
+  <div class="meta" style="margin-top:6px">Base: eventos principais do cronograma financeiro (CAPEX). Valores agregados por mês.</div>
+  <table class="fin">
+    <tr><th>Mês</th><th style="text-align:right">Desembolso do mês</th><th style="text-align:right">Acumulado</th></tr>
+    <tr><td>12/2025</td><td style='text-align:right'>R$ 185.000</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td style='text-align:right'>R$ 3.632.500</td><td style='text-align:right'>R$ 3.817.500</td></tr><tr><td>02/2026</td><td style='text-align:right'>R$ 1.794.000</td><td style='text-align:right'>R$ 5.611.500</td></tr><tr><td>03/2026</td><td style='text-align:right'>R$ 1.011.800</td><td style='text-align:right'>R$ 6.623.300</td></tr><tr><td>04/2026</td><td style='text-align:right'>R$ 600.000</td><td style='text-align:right'>R$ 7.223.300</td></tr><tr><td>05/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.473.300</td></tr><tr><td>06/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.723.300</td></tr><tr><td>07/2026</td><td style='text-align:right'>R$ 102.500</td><td style='text-align:right'>R$ 7.825.800</td></tr>
+  </table>
+  <h3 style="margin:16px 0 6px; font-size:13px">Detalhe por categoria (por mês)</h3>
+  <table class="fin">
+    <tr><th>Mês</th><th>Categoria</th><th style="text-align:right">Valor</th></tr>
+    <tr><td>12/2025</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td>Painéis</td><td style='text-align:right'>R$ 2.475.000</td></tr><tr><td>01/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>01/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>01/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>01/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>01/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>01/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>01/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>01/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>02/2026</td><td>Equipamentos elétricos pesados</td><td style='text-align:right'>R$ 470.000</td></tr><tr><td>02/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>02/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>02/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>02/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>02/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 29.000</td></tr><tr><td>02/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>02/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>03/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 275.000</td></tr><tr><td>03/2026</td><td>Insumos civis</td><td style='text-align:right'>R$ 256.800</td></tr><tr><td>03/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>03/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>03/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>03/2026</td><td>Logística/guindaste</td><td style='text-align:right'>R$ 30.000</td></tr><tr><td>03/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>03/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>04/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>04/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>04/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>04/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>04/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>04/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>05/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>05/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>05/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>05/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>06/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>06/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>06/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>06/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>07/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>07/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr>
+  </table>
+</section>
+</div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html><html lang='pt-BR'>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>UFV LZN – Desembolso mensal</title>
+<style>
+  :root{
+    --bg:#0b1020; --fg:#e8ecff; --muted:#a8b0d6; --grid:#222a4a; --card:#10183a;
+    --line:#2b3564; --pill:#1a2452;
+    --p0:#ffcc66; --p1:#5aa7ff; --p2:#72e6a6; --sup:#ff7aa2; --risk:#c6b7ff;
+    --rowH:36px; --leftW:460px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--fg); }
+  .wrap{ max-width:1480px; margin:0 auto; padding:18px; }
+  h1{ font-size:18px; margin:0 0 6px; }
+  .meta{ color:var(--muted); font-size:13px; line-height:1.45; margin:0 0 14px; }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border-radius:999px;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--muted);
+    font-size:11px; margin-right:6px;
+  }
+  .hdr{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap; }
+  .hdr .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  button{
+    background:#0e1534; color:var(--fg); border:1px solid var(--line); border-radius:10px;
+    padding:8px 10px; font-size:12px; cursor:pointer;
+  }
+  button:hover{ filter:brightness(1.07); }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .legend{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .tag{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:var(--pill); border:1px solid var(--line); font-size:12px; color:var(--muted); }
+  .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+
+  .kpi{ display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:10px; }
+  .kpi .box{ border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; background:rgba(255,255,255,.02); }
+  .kpi .box .t{ color:var(--muted); font-size:11px; }
+  .kpi .box .v{ font-size:14px; font-weight:700; margin-top:2px; }
+
+  .hr{ height:1px; background:rgba(255,255,255,.08); margin:10px 0; }
+
+  /* === PLANILHA ÚNICA, SEM BARRAS DE ROLAGEM === */
+  .sheetWrap{ overflow:visible; }
+  .sheetInner{ min-width:1100px; }
+
+  .row{
+    display:grid;
+    grid-template-columns: var(--leftW) 1fr;
+    align-items:stretch;
+    height:var(--rowH);
+    border-bottom:1px solid rgba(43,53,100,.55);
+  }
+  .row:nth-child(2n){ background:rgba(255,255,255,.02); }
+
+  .cellL{
+    position:sticky; left:0; z-index:2;
+    padding:4px 8px;
+    background:linear-gradient(90deg, rgba(16,24,58,1), rgba(16,24,58,.98));
+    border-right:1px solid rgba(43,53,100,.65);
+    overflow:hidden;
+  }
+  .cellL .name{ font-weight:650; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cellL .sub{ color:var(--muted); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .cellR{ position:relative; }
+  .bar{ position:absolute; top:8px; height:20px; border-radius:8px; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset; }
+  .ms{ position:absolute; top:8px; width:10px; height:20px; border-radius:6px; background:#fff; box-shadow:0 0 0 1px rgba(0,0,0,.35); }
+
+  .headerRow{ position:sticky; top:0; z-index:5; background:linear-gradient(180deg, rgba(16,24,58,1), rgba(16,24,58,.95)); }
+  .headerRow .cellL{ z-index:6; }
+  .ticks{ position:relative; height:var(--rowH); }
+  .tick{ position:absolute; top:0; height:var(--rowH); border-left:1px solid var(--grid); }
+  .tick span{ position:absolute; top:10px; left:6px; color:var(--muted); font-size:11px; white-space:nowrap; }
+
+  @media print{
+    @page{ size:A4 landscape; margin:10mm; }
+    :root{ --bg:#ffffff; --fg:#000000; --muted:#000000; --card:#ffffff; --line:#cccccc; --pill:#ffffff; --grid:#dddddd; }
+    body{ background:#fff !important; color:#000 !important; }
+    .card{ background:#fff !important; border:1px solid #ccc !important; }
+    .meta,.tag{ color:#000 !important; }
+    .pill{ background:#fff !important; border:1px solid #ccc !important; color:#000 !important; }
+    button{ display:none !important; }
+    .cellL{ background:#fff !important; }
+    .bar{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .tick span{ color:#000 !important; }
+  }
+
+/* Financeiro (resumo) */
+table.fin{ width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10); margin-top:10px; }
+table.fin th, table.fin td{ padding:10px 10px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; }
+table.fin th{ text-align:left; color:var(--muted); background:rgba(255,255,255,.03); }
+table.fin tr:last-child td{ border-bottom:none; }
+table.fin td:nth-child(2){ white-space:nowrap; }
+table.fin td:nth-child(3){ text-align:right; font-variant-numeric: tabular-nums; white-space:nowrap; }
+@media print{
+  table.fin{ border:1px solid #ccc !important; }
+  table.fin th{ background:#f2f2f2 !important; color:#111 !important; }
+  table.fin td{ color:#111 !important; border-bottom:1px solid #ddd !important; }
+}
+
+/* Financeiro (resumo) */
+table.fin{ width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10); margin-top:10px; }
+table.fin th, table.fin td{ padding:10px 10px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; }
+table.fin th{ text-align:left; color:var(--muted); background:rgba(255,255,255,.03); }
+table.fin tr:last-child td, table.fin tr:last-child th{ border-bottom:none; }
+table.fin td:nth-child(4){ white-space:nowrap; }
+table.fin td:nth-child(5){ white-space:nowrap; font-variant-numeric: tabular-nums; }
+@media print{
+  table.fin{ border:1px solid #ccc !important; }
+  table.fin th{ background:#f2f2f2 !important; color:#111 !important; }
+  table.fin td{ color:#111 !important; border-bottom:1px solid #ddd !important; }
+}
+</style>
+</head>
+<body>
+<div class='wrap'>
+<header>
+<h1>UFV LZN – Desembolso mensal · v28 · revisão 24/12/2025 11:22</h1>
+<div class='meta'>Base: eventos principais do cronograma financeiro (CAPEX). Alguns itens já adquiridos não constam.</div>
+</header>
+
+<section style="margin-top:34px">
+  <h2>Desembolso mensal</h2>
+  <div class="meta" style="margin-top:6px">Base: eventos principais do cronograma financeiro (CAPEX). Valores agregados por mês.</div>
+  <table class="fin">
+    <tr><th>Mês</th><th style="text-align:right">Desembolso do mês</th><th style="text-align:right">Acumulado</th></tr>
+    <tr><td>12/2025</td><td style='text-align:right'>R$ 185.000</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td style='text-align:right'>R$ 3.632.500</td><td style='text-align:right'>R$ 3.817.500</td></tr><tr><td>02/2026</td><td style='text-align:right'>R$ 1.794.000</td><td style='text-align:right'>R$ 5.611.500</td></tr><tr><td>03/2026</td><td style='text-align:right'>R$ 1.011.800</td><td style='text-align:right'>R$ 6.623.300</td></tr><tr><td>04/2026</td><td style='text-align:right'>R$ 600.000</td><td style='text-align:right'>R$ 7.223.300</td></tr><tr><td>05/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.473.300</td></tr><tr><td>06/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.723.300</td></tr><tr><td>07/2026</td><td style='text-align:right'>R$ 102.500</td><td style='text-align:right'>R$ 7.825.800</td></tr>
+  </table>
+  <h3 style="margin:16px 0 6px; font-size:13px">Detalhe por categoria (por mês)</h3>
+  <table class="fin">
+    <tr><th>Mês</th><th>Categoria</th><th style="text-align:right">Valor</th></tr>
+    <tr><td>12/2025</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td>Painéis</td><td style='text-align:right'>R$ 2.475.000</td></tr><tr><td>01/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>01/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>01/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>01/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>01/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>01/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>01/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>01/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>02/2026</td><td>Equipamentos elétricos pesados</td><td style='text-align:right'>R$ 470.000</td></tr><tr><td>02/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>02/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>02/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>02/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>02/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 29.000</td></tr><tr><td>02/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>02/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>03/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 275.000</td></tr><tr><td>03/2026</td><td>Insumos civis</td><td style='text-align:right'>R$ 256.800</td></tr><tr><td>03/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>03/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>03/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>03/2026</td><td>Logística/guindaste</td><td style='text-align:right'>R$ 30.000</td></tr><tr><td>03/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>03/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>04/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>04/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>04/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>04/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>04/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>04/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>05/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>05/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>05/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>05/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>06/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>06/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>06/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>06/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>07/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>07/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr>
+  </table>
+</section>
+
+</div>
+</body></html>
