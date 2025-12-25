@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projeto LZN — UFV GD1 (Hub)</title>
+  <style>
+    :root{
+      --gold:#d4af37;
+      --dark-blue:#1a2a3a;
+      --bg:#0d141b;
+      --text:#ecf0f1;
+      --muted:#95a5a6;
+      --card:rgba(255,255,255,0.03);
+      --border:rgba(212,175,55,0.35);
+      --shadow:rgba(0,0,0,0.45);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      font-family:'Segoe UI', Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      margin:0;
+      padding:40px 18px;
+    }
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      background:var(--dark-blue);
+      border:1px solid var(--gold);
+      border-radius:15px;
+      padding:34px;
+      box-shadow:0 0 30px var(--shadow);
+    }
+    header{
+      text-align:center;
+      padding-bottom:18px;
+      border-bottom:2px solid var(--gold);
+    }
+    h1{
+      color:var(--gold);
+      margin:0;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:22px;
+    }
+    .subtitle{
+      margin:10px auto 0;
+      max-width:900px;
+      color:var(--text);
+      opacity:.92;
+      line-height:1.6;
+      font-size:14px;
+    }
+    .meta{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:16px;
+      margin-top:22px;
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:var(--card);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:16px;
+      border-left:4px solid var(--gold);
+      padding-left:10px;
+    }
+    .card p{
+      margin:0 0 12px;
+      line-height:1.6;
+      color:var(--text);
+      opacity:.92;
+      font-size:14px;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    a.btn{
+      display:inline-block;
+      text-decoration:none;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(212,175,55,0.55);
+      background:rgba(212,175,55,0.10);
+      color:var(--text);
+      font-weight:600;
+      font-size:13px;
+    }
+    a.btn:hover{ filter:brightness(1.08); }
+
+    footer{
+      margin-top:24px;
+      padding-top:18px;
+      border-top:1px solid rgba(212,175,55,0.2);
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.55;
+    }
+
+    @media (max-width: 900px){
+      .grid{ grid-template-columns:1fr; }
+      body{ padding:26px 12px; }
+      .container{ padding:22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Projeto LZN — UFV GD1</h1>
+      <div class="subtitle">
+        Hub de acesso aos relatórios e anexos financeiros (Curva S / desembolso), além do mapa operacional da usina.
+      </div>
+      <div class="meta">
+        GitHub Pages: <b>ffonsecabc.github.io/ProjetoLZN</b>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>One Page — Comitê (Cota 0,1 MWac)</h2>
+        <p>Resumo executivo para decisão: tese, estrutura SPE, riscos, cronograma CAPEX e nota institucional.</p>
+        <div class="actions">
+          <a class="btn" href="ONE_PAGE_COMITE_v2.html">Abrir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Relatório Detalhado — Investidor PF/PJ</h2>
+        <p>Material completo: SCEE/Rateio, GC vs GD, curtailment, GD1/GD2/GD3 (Fio B), Goiás/ICMS, governança, tabela e Curva S.</p>
+        <div class="actions">
+          <a class="btn" href="ROI_DETALHADO_v2.html">Abrir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Plano Visual Consolidado (Fase 0/1/2 + Suprimentos)</h2>
+        <p>Cronograma visual + resumo financeiro (CAPEX), Curva S e desembolso mensal.</p>
+        <div class="actions">
+          <a class="btn" href="UFV_LZN_plano_visual_consolidado_v28.html">Abrir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Curva S Financeira (CAPEX)</h2>
+        <p>Acumulado mensal do CAPEX com visualização da Curva S para leitura de cronograma e necessidade de caixa.</p>
+        <div class="actions">
+          <a class="btn" href="UFV_LZN_financeiro_curvaS_v281.html">Abrir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Desembolso Mensal (CAPEX)</h2>
+        <p>Tabela consolidada de desembolso do mês e acumulado, além de detalhamento por categoria.</p>
+        <div class="actions">
+          <a class="btn" href="UFV_LZN_financeiro_desembolso_mensal_v281.html">Abrir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Mapa da Usina (DroneDeploy)</h2>
+        <p>Mapa operacional / inspeção (abre em nova aba).</p>
+        <div class="actions">
+          <a class="btn" href="https://www.dronedeploy.com/app2/sites/671e0f2d44b2248e7f7f2743/maps/671e7479bca3360e534bdab7" target="_blank" rel="noopener">Abrir</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Atualize os HTMLs, faça commit e o GitHub Pages servirá a versão mais recente.
+    </footer>
+  </div>
+</body>
+</html>
