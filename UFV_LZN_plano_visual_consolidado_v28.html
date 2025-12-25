@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>UFV LZN – Plano Visual (Fase 0/1/2 + Suprimentos) · v28 · revisão 24/12/2025 11:22</title>
+<style>
+  :root{
+    --bg:#0b1020; --fg:#e8ecff; --muted:#a8b0d6; --grid:#222a4a; --card:#10183a;
+    --line:#2b3564; --pill:#1a2452;
+    --p0:#ffcc66; --p1:#5aa7ff; --p2:#72e6a6; --sup:#ff7aa2; --risk:#c6b7ff;
+    --rowH:36px; --leftW:460px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--fg); }
+  .wrap{ max-width:1480px; margin:0 auto; padding:18px; }
+  h1{ font-size:18px; margin:0 0 6px; }
+  .meta{ color:var(--muted); font-size:13px; line-height:1.45; margin:0 0 14px; }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border-radius:999px;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--muted);
+    font-size:11px; margin-right:6px;
+  }
+  .hdr{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap; }
+  .hdr .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  button{
+    background:#0e1534; color:var(--fg); border:1px solid var(--line); border-radius:10px;
+    padding:8px 10px; font-size:12px; cursor:pointer;
+  }
+  button:hover{ filter:brightness(1.07); }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .legend{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .tag{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:var(--pill); border:1px solid var(--line); font-size:12px; color:var(--muted); }
+  .dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+
+  .kpi{ display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-top:10px; }
+  .kpi .box{ border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; background:rgba(255,255,255,.02); }
+  .kpi .box .t{ color:var(--muted); font-size:11px; }
+  .kpi .box .v{ font-size:14px; font-weight:700; margin-top:2px; }
+
+  .hr{ height:1px; background:rgba(255,255,255,.08); margin:10px 0; }
+
+  /* === PLANILHA ÚNICA, SEM BARRAS DE ROLAGEM === */
+  .sheetWrap{ overflow:visible; }
+  .sheetInner{ min-width:1100px; }
+
+  .row{
+    display:grid;
+    grid-template-columns: var(--leftW) 1fr;
+    align-items:stretch;
+    height:var(--rowH);
+    border-bottom:1px solid rgba(43,53,100,.55);
+  }
+  .row:nth-child(2n){ background:rgba(255,255,255,.02); }
+
+  .cellL{
+    position:sticky; left:0; z-index:2;
+    padding:4px 8px;
+    background:linear-gradient(90deg, rgba(16,24,58,1), rgba(16,24,58,.98));
+    border-right:1px solid rgba(43,53,100,.65);
+    overflow:hidden;
+  }
+  .cellL .name{ font-weight:650; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cellL .sub{ color:var(--muted); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .cellR{ position:relative; }
+  .bar{ position:absolute; top:8px; height:20px; border-radius:8px; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset; }
+  .ms{ position:absolute; top:8px; width:10px; height:20px; border-radius:6px; background:#fff; box-shadow:0 0 0 1px rgba(0,0,0,.35); }
+
+  .headerRow{ position:sticky; top:0; z-index:5; background:linear-gradient(180deg, rgba(16,24,58,1), rgba(16,24,58,.95)); }
+  .headerRow .cellL{ z-index:6; }
+  .ticks{ position:relative; height:var(--rowH); }
+  .tick{ position:absolute; top:0; height:var(--rowH); border-left:1px solid var(--grid); }
+  .tick span{ position:absolute; top:10px; left:6px; color:var(--muted); font-size:11px; white-space:nowrap; }
+
+  @media print{
+    @page{ size:A4 landscape; margin:10mm; }
+    :root{ --bg:#ffffff; --fg:#000000; --muted:#000000; --card:#ffffff; --line:#cccccc; --pill:#ffffff; --grid:#dddddd; }
+    body{ background:#fff !important; color:#000 !important; }
+    .card{ background:#fff !important; border:1px solid #ccc !important; }
+    .meta,.tag{ color:#000 !important; }
+    .pill{ background:#fff !important; border:1px solid #ccc !important; color:#000 !important; }
+    button{ display:none !important; }
+    .cellL{ background:#fff !important; }
+    .bar{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .tick span{ color:#000 !important; }
+  }
+
+/* Financeiro (resumo) */
+table.fin{ width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10); margin-top:10px; }
+table.fin th, table.fin td{ padding:10px 10px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; }
+table.fin th{ text-align:left; color:var(--muted); background:rgba(255,255,255,.03); }
+table.fin tr:last-child td{ border-bottom:none; }
+table.fin td:nth-child(2){ white-space:nowrap; }
+table.fin td:nth-child(3){ text-align:right; font-variant-numeric: tabular-nums; white-space:nowrap; }
+@media print{
+  table.fin{ border:1px solid #ccc !important; }
+  table.fin th{ background:#f2f2f2 !important; color:#111 !important; }
+  table.fin td{ color:#111 !important; border-bottom:1px solid #ddd !important; }
+}
+
+/* Financeiro (resumo) */
+table.fin{ width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10); margin-top:10px; }
+table.fin th, table.fin td{ padding:10px 10px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; }
+table.fin th{ text-align:left; color:var(--muted); background:rgba(255,255,255,.03); }
+table.fin tr:last-child td, table.fin tr:last-child th{ border-bottom:none; }
+table.fin td:nth-child(4){ white-space:nowrap; }
+table.fin td:nth-child(5){ white-space:nowrap; font-variant-numeric: tabular-nums; }
+@media print{
+  table.fin{ border:1px solid #ccc !important; }
+  table.fin th{ background:#f2f2f2 !important; color:#111 !important; }
+  table.fin td{ color:#111 !important; border-bottom:1px solid #ddd !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <h1>UFV LZN – Plano Visual (Fase 0/1/2 + Suprimentos) · v28 · revisão 24/12/2025 11:22</h1>
+      <div class="meta">
+        <span class="pill">Potência: <b>4,4 MWac</b></span>
+        <span class="pill">Deadline: <b>30/04/2026</b></span>
+        <span class="pill">Início efetivo: <b>05/01/2026</b></span>
+        <span class="pill">Fase 2 (intervenções): <b>a partir de 15/02/2026</b></span>
+        <span class="pill">Painéis novos: <b>3.600</b> (pedido <b>01/02</b>, lead <b>45d</b>)</span>
+        <span class="pill">Inversores Fase 1: entrega <b>19/01</b></span>
+        <span class="pill">Abrigo inversores: entrega <b>26/01</b></span><br/>
+        <b>Diferença Fase 1 × Fase 2:</b> muda o <b>grupo de proprietários</b>; execução por <b>PME/BDF Engenharia</b> ou <b>Lumitec</b>.<br/>
+        <b>Contexto Fase 1 já existente:</b> parte do site já possui <b>SPDA</b>, <b>estrutura</b>, <b>brita</b>, <b>tubulações/caixas</b> e <b>painéis</b> instalados.
+      </div>
+    </div>
+    <div class="right">
+      <button onclick="window.print()">Imprimir / PDF</button>
+      <button onclick="fitAll()">Enquadrar</button>
+      <button onclick="fitJan()">Ver Jan/2026</button>
+      <button onclick="fitPhase2()">Ver Fase 2</button>
+    </div>
+  </div>
+
+  <!-- LEGENDA + KPIs ACIMA -->
+  <div class="card">
+    <div class="legend">
+      <div class="tag"><span class="dot" style="background:var(--p0)"></span>Preparação (até 05/01)</div>
+      <div class="tag"><span class="dot" style="background:var(--p1)"></span>Fase 1 (5 dias – até 09/01)</div>
+      <div class="tag"><span class="dot" style="background:var(--p2)"></span>Fase 2 (campo pesado)</div>
+      <div class="tag"><span class="dot" style="background:var(--sup)"></span>Suprimentos / logística (Fase 2)</div>
+      <div class="tag"><span class="dot" style="background:var(--risk)"></span>Travas operacionais</div>
+    </div>
+
+    
+<div class="kpi">
+  <div class="box"><div class="t">Início efetivo</div><div class="v">05/01</div></div>
+  <div class="box"><div class="t">Marco Fase 2 (intervenções)</div><div class="v">15/02</div></div>
+  <div class="box"><div class="t">Entrega trafos (F1+F2)</div><div class="v">25/03</div></div>
+  <div class="box"><div class="t">Pedido de vistoria</div><div class="v">30/04</div></div>
+</div>
+
+</div>
+      <div class="box"><div class="t">Descarga painéis</div><div class="v">10 carretas · 5 dias</div></div>
+      <div class="box"><div class="t">Perfuração (Fase 2)</div><div class="v">125 furos/dia (900 = 8 dias úteis)</div></div>
+      <div class="box"><div class="t">Concretagem (Fase 2)</div><div class="v">50 pilares/dia (900 = 18 dias úteis)</div></div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="meta" style="margin:0">
+    <span class="pill">Aprovação desenhos (prev.): <b>09/01/2026</b></span>
+    <span class="pill">Entrega trafos (75 dias): <b>25/03/2026</b></span>
+    <span class="pill">Instalação trafo+QGBT (10 dias): <b>26/03/2026 → 04/04/2026</b></span>
+  </div>
+
+
+  <!-- CRONOGRAMA ABAIXO -->
+  <div class="card" style="margin-top:12px;">
+    <div class="sheetWrap">
+      <div class="sheetInner" id="sheetInner"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fmtBR(iso){
+    const dt = new Date(iso+"T00:00:00");
+    const dd = String(dt.getDate()).padStart(2,'0');
+    const mm = String(dt.getMonth()+1).padStart(2,'0');
+    const yy = dt.getFullYear();
+    return `${dd}/${mm}/${yy}`;
+  }
+
+  const tasks = [
+{name:"01 · Coleta de pontos topografia (Fase 2) – sem gatilho financeiro", start:"2025-12-23", end:"2026-01-05", color:"var(--p0)", notes:"Insumo para implantação de campo"},
+    {name:"02 · Contratação zeladoria/vigilância + instalação de segurança", start:"2025-12-23", end:"2026-01-05", color:"var(--p0)", notes:"Segurança patrimonial e controle de acesso"},
+    {name:"03 · Organização casa de apoio (dormitórios/cozinha/água potável)", start:"2025-12-23", end:"2026-01-05", color:"var(--p0)", notes:"Infra para início efetivo"},
+    {name:"04 · Início efetivo das atividades", start:"2026-01-05", end:"2026-01-05", type:"ms", notes:"Início oficial em campo"},
+    {name:"05 · Fase 1 (5 dias) – Execução com 3 técnicos + acompanhamento", start:"2026-01-05", end:"2026-01-09", color:"var(--p1)", notes:"Janela total do pacote Fase 1"},
+    {name:"06 · Levantamento: painéis/strings/fileiras já instaladas (as built)", start:"2026-01-05", end:"2026-01-06", color:"var(--p1)", notes:"Inventário físico e organização do as-built"},
+    {name:"07 · Nomeação + plaquetas das fileiras", start:"2026-01-06", end:"2026-01-07", color:"var(--p1)", notes:"Rastreabilidade e padronização"},
+    {name:"08 · Testes elétricos das fileiras (Fase 1)", start:"2026-01-07", end:"2026-01-08", color:"var(--p1)", notes:"Megagem/continuidade/polaridade conforme procedimento"},
+    {name:"09 · Mapeamento de caixas + cabos de referência (início)", start:"2026-01-08", end:"2026-01-09", color:"var(--p1)", notes:"Amarração de referência e documentação"},
+    {name:"10A · Base abrigo inversores Fase 1 – execução (civil leve)", start:"2026-02-02", end:"2026-02-02", color:"var(--p1)", notes:"Civil leve (1 dia) – após entrega do abrigo (26/01)"},
+    {name:"10E · Montagem 10 inversores Fase 1", start:"2026-02-10", end:"2026-02-10", color:"var(--p1)", notes:"1 dia (10 inversores)"},
+    {name:"PRE · Contratação concreteira – Base trafos (F1+F2)", start:"2026-03-03", end:"2026-03-03", type:"ms", notes:"Contratar 7 dias antes da concretagem da base dos trafos"},
+    {name:"12A1 · Base trafos (F1+F2): formas + armação", start:"2026-03-04", end:"2026-03-09", color:"var(--p2)", notes:"Preparação civil para descarregar trafo no local definitivo"},
+    {name:"12A2 · Base trafos (F1+F2): concretagem", start:"2026-03-10", end:"2026-03-10", color:"var(--p2)", notes:"Concretagem da base antes da entrega (requisito para descarga definitiva)"},
+    {name:"12A3 · Base trafos (F1+F2): cura do concreto (14 dias)", start:"2026-03-11", end:"2026-03-24", color:"var(--p2)", notes:"Cura obrigatória – base pronta para receber equipamentos"},
+    {name:"12B · MARCO: entrega trafos (F1+F2) + descarga no local definitivo", start:"2026-03-25", end:"2026-03-25", type:"ms", notes:"Entrega conjunta; munck/guindaste no dia"},
+    {name:"12C · Instalação Trafo + QGBT + cabos (Trafo↔QGBT, QGBT↔Inversores)", start:"2026-03-26", end:"2026-04-04", color:"var(--p2)", notes:"10 dias; mecânica no dia da descarga, elétrica nos dias seguintes"},
+    {name:"12D · Cabos CA 34,8 kV (postes/muflas/subterrâneo) – após trafos alocados", start:"2026-03-26", end:"2026-03-27", color:"var(--p2)", notes:"2 dias; pronto para teste; caminho crítico para energização"},
+    {name:"PRE · Contratação empresa ensaios MT/QGBT (especializada)", start:"2026-03-16", end:"2026-03-16", type:"ms", notes:"Empresa independente · contratar 20 dias antes do início dos testes"},
+    {name:"MT1 · Teste continuidade + aterramento (MT)", start:"2026-04-05", end:"2026-04-05", color:"var(--p2)", notes:"Empresa especializada independente"},
+    {name:"MT2 · Teste isolação (megger MT)", start:"2026-04-06", end:"2026-04-06", color:"var(--p2)", notes:"Empresa especializada independente"},
+    {name:"MT3 · Ensaios funcionais do QGBT (proteções/intertravamentos)", start:"2026-04-07", end:"2026-04-07", color:"var(--p2)", notes:"Empresa especializada independente"},
+    {name:"MT4 · Energização assistida (MT) + verificação de parâmetros", start:"2026-04-08", end:"2026-04-08", color:"var(--p2)", notes:"Empresa especializada independente"},
+    {name:"MT5 · MARCO: liberação técnica para operação (pré-vistoria)", start:"2026-04-09", end:"2026-04-09", type:"ms", notes:"Sistema pronto para vistoria / comissionamento final"},
+    {name:"CERC1 · Cercamento completo Fase 1", start:"2026-01-10", end:"2026-01-24", color:"var(--risk)", notes:"15 dias; antecipado para não ociosar equipe"},
+    {name:"CERC2 · Cercamento completo Fase 2", start:"2026-02-20", end:"2026-03-06", color:"var(--risk)", notes:"15 dias; após liberação de frentes"},
+    {name:"11 · Pedido de 3.600 painéis (R$ 550/un) – lead 45 dias", start:"2026-02-01", end:"2026-03-17", color:"var(--sup)", notes:"Travamento de fornecimento (Fase 2)"},
+    {name:"12 · Entrega/descarga dos painéis (10 carretas / 5 dias)", start:"2026-03-18", end:"2026-03-22", color:"var(--sup)", notes:"Pátio, conferência, armazenagem"},
+    {name:"13 · Marco Fase 2 – intervenções liberadas", start:"2026-02-15", end:"2026-02-15", type:"ms", notes:"Marco de contrato/caixa"},
+    {name:"PRE · Contratação empresa de perfuração (900 furos)", start:"2026-02-01", end:"2026-02-01", type:"ms",
+notes:"Execução 125 furos/dia · 8 dias · R$ 3.000/dia + R$ 5.000 mobilização (pagamento fracionado por medição)"},
+    {name:"14 · Perfuração (900) – 125/dia (frentes múltiplas)", start:"2026-02-16", end:"2026-02-25", color:"var(--p2)", notes:"8 dias úteis (6x1)"},
+    {name:"15 · Posicionamento + concretagem pilares (900) – 50/dia", start:"2026-02-19", end:"2026-03-12", color:"var(--p2)", notes:"18 dias úteis, sobreposto à perfuração"},
+    {name:"15A · MARCO: Concretagem pilares – Lote 1 (setor 1)", start:"2026-02-24", end:"2026-02-24", type:"ms", notes:"Concretagem em blocos/lotes (300 pilares aprox.)"},
+    {name:"15B · MARCO: Concretagem pilares – Lote 2 (setor 2)", start:"2026-03-01", end:"2026-03-01", type:"ms", notes:"Concretagem em blocos/lotes (300 pilares aprox.)"},
+    {name:"15C · MARCO: Concretagem pilares – Lote 3 (setor 3)", start:"2026-03-07", end:"2026-03-07", type:"ms", notes:"Concretagem em blocos/lotes (300 pilares aprox.)"},
+    {name:"16 · SPDA (valas) – em paralelo", start:"2026-03-13", end:"2026-04-02", color:"var(--p2)", notes:"Coordenação de cruzamentos"},
+    {name:"17 · Tubulações + caixas (CC) – em paralelo ao SPDA", start:"2026-03-13", end:"2026-04-02", color:"var(--p2)", notes:"Coordenação de cruzamentos"},
+    {name:"18 · TRAVA: Britagem só após SPDA + Tubulações concluídos", start:"2026-04-03", end:"2026-04-18", color:"var(--risk)", notes:"Liberação de circulação para montagem"},
+    {name:"19 · Montagem da estrutura metálica (setorizada)", start:"2026-04-07", end:"2026-04-25", color:"var(--p2)", notes:"Pode iniciar com ≥20% britagem por setor"},
+    {name:"20 · Regra: iniciar instalação painéis com 5% da estrutura pronta", start:"2026-04-10", end:"2026-04-10", type:"ms", notes:"Setorização"},
+    {name:"21 · Instalação painéis (por setores, equipes reforçadas)", start:"2026-04-10", end:"2026-04-28", color:"var(--p2)", notes:"Inicia com 5% da estrutura"},
+    {name:"22 · Cabeamento CC (SS com instalação de painéis)", start:"2026-04-13", end:"2026-04-28", color:"var(--p2)", notes:"Paralelizar para ganhar prazo"},
+    {name:"23 · Instalação elétrica CC/CA e fechamento", start:"2026-04-22", end:"2026-04-30", color:"var(--p2)", notes:"Fechamento para entrega"},
+    {name:"MARCO · Pedido de vistoria", start:"2026-04-30", end:"2026-04-30", type:"ms", notes:"Regulatório"},
+    {name:"MARCO · Conexão com concessionária", start:"2026-06-01", end:"2026-06-01", type:"ms", notes:"Regulatório"},
+    {name:"MARCO · Primeira medição", start:"2026-06-27", end:"2026-06-27", type:"ms", notes:"Regulatório"},
+    {name:"MARCO · Alteração titularidade para SPE", start:"2026-07-05", end:"2026-07-05", type:"ms", notes:"Regulatório"},
+    {name:"24 · DEADLINE (pronto para pedir vistoria)", start:"2026-04-30", end:"2026-04-30", type:"ms", notes:"Tudo pronto para solicitar vistoria"},
+    {name:"PV1 · Vistoria concessionária (execução)", start:"2026-05-05", end:"2026-05-05", type:"ms", notes:"Data estimada (pode variar)"},
+    {name:"PV2 · Relatório de pendências (retorno concessionária)", start:"2026-05-06", end:"2026-05-06", type:"ms", notes:"Recebimento/registro de pendências"},
+    {name:"PV3 · Correções pós-vistoria (mesma equipe da obra)", start:"2026-05-07", end:"2026-05-11", color:"var(--risk)", notes:"Janela de correções 3–5 dias"},
+    {name:"PV4 · Reinspeção / aceite final", start:"2026-05-15", end:"2026-05-15", type:"ms", notes:"Data estimada (pode variar)"},
+    {name:"PV5 · Segurança + comunicação de dados (pós pedido vistoria)", start:"2026-05-01", end:"2026-05-31", color:"var(--p1)", notes:"Trabalhos permitidos após pedido de vistoria"},
+    {name:"MARCO · Conexão com concessionária (ALVO)", start:"2026-06-01", end:"2026-06-01", type:"ms", notes:"Data alvo (risco regulatório)"},
+    {name:"MARCO · Primeira medição", start:"2026-06-27", end:"2026-06-27", type:"ms", notes:"Regulatório"},
+    {name:"MARCO · Alteração titularidade para SPE", start:"2026-07-05", end:"2026-07-05", type:"ms", notes:"Regulatório"},
+    {name:"ESTR1 · Pedido estrutura metálica (Fase 2)", start:"2026-01-20", end:"2026-01-20", type:"ms", notes:"Pedido liberado"},
+    {name:"ESTR2 · Entrega estrutura metálica – Carga 1 (pilares)", start:"2026-02-09", end:"2026-02-09", type:"ms", notes:"20 dias após pedido"},
+    {name:"ESTR3 · Entrega estrutura metálica – Carga 2 (demais peças)", start:"2026-03-01", end:"2026-03-01", type:"ms", notes:"40 dias após pedido"},
+    {name:"TRAFO1 · Caixaria/base Trafo Fase 1 (adiantada)", start:"2026-02-10", end:"2026-02-14", color:"var(--p2)", notes:"Antecipação para uso de mão de obra em fev/26"}
+  ];
+
+  
+  // --- Ajuste automático de janela (reduz largura real) ---
+  function computeBounds(){
+    let minD=null, maxD=null;
+    tasks.forEach(t=>{
+      const s=new Date(t.start+"T00:00:00");
+      const e=new Date(t.end+"T00:00:00");
+      minD = minD? (s<minD?s:minD): s;
+      maxD = maxD? (e>maxD?e:maxD): e;
+    });
+    // padding de 5 dias
+    minD = new Date(minD.getTime() - 5*msDay);
+    maxD = new Date(maxD.getTime() + 5*msDay);
+    viewStart=minD; viewEnd=maxD;
+  }
+
+
+  let viewStart = new Date("2025-12-20T00:00:00");
+  let viewEnd   = new Date("2026-05-03T00:00:00");
+  const msDay = 24*60*60*1000;
+
+  const sheetInner = document.getElementById("sheetInner");
+
+  function daysBetween(a,b){ return Math.round((b - a)/msDay); }
+  function xOf(dt){ return daysBetween(viewStart, dt) * 6; }
+
+  function render(){
+    sheetInner.innerHTML = "";
+    const totalDays = daysBetween(viewStart, viewEnd) + 1;
+    const widthPx = Math.max(900, totalDays * 6);
+
+    const header = document.createElement("div");
+    header.className = "row headerRow";
+    header.innerHTML = `
+      <div class="cellL"><div class="name">Atividades</div><div class="sub">Datas (BR) · notas resumidas</div></div>
+      <div class="cellR"><div class="ticks" id="ticks" style="width:${widthPx}px"></div></div>`;
+    sheetInner.appendChild(header);
+
+    const ticksEl = header.querySelector("#ticks");
+    // --- Ticks: linhas leves semanais + rótulos somente nas datas de EVENTO ---
+    // linhas semanais (grid)
+    for(let i=0;i<=totalDays;i++){
+      const d = new Date(viewStart.getTime() + i*msDay);
+      if(d.getDay() === 1){ // segunda
+        const t = document.createElement("div");
+        t.className = "tick";
+        t.style.left = (i*6) + "px";
+        t.style.opacity = ".35";
+        ticksEl.appendChild(t);
+      }
+    }
+
+    // datas de evento: inícios/fins e marcos (sem ano no rótulo)
+    const ev = new Set();
+    tasks.forEach(t=>{ ev.add(t.start); ev.add(t.end); });
+    const evList = Array.from(ev).sort(); // ISO sort ok
+    let lastX = -1e9;
+    evList.forEach(iso=>{
+      const d = new Date(iso+"T00:00:00");
+      const i = daysBetween(viewStart, d);
+      if(i < 0 || i > totalDays) return;
+      const x = i*6;
+      // evita sobreposição: exige 38px entre rótulos
+      if(x - lastX < 38) return;
+      lastX = x;
+
+      const t = document.createElement("div");
+      t.className = "tick";
+      t.style.left = x + "px";
+      t.style.opacity = ".9";
+
+      const s = document.createElement("span");
+      const br = fmtBR(iso);
+      s.textContent = br.slice(0,5);
+      s.style.padding = "2px 6px";
+      s.style.borderRadius = "8px";
+      s.style.background = "rgba(15,22,55,.65)";
+      s.style.border = "1px solid rgba(255,255,255,.08)";
+      s.style.backdropFilter = "blur(6px)";
+      t.appendChild(s);
+      ticksEl.appendChild(t);
+    });
+
+
+    tasks.forEach((t)=>{
+      const row = document.createElement("div");
+      row.className = "row";
+      const s = new Date(t.start+"T00:00:00");
+      const e = new Date(t.end+"T00:00:00");
+      const left = xOf(s);
+      const width = Math.max(10, (daysBetween(s,e)+1)*6);
+
+      row.innerHTML = `
+        <div class="cellL"><div class="name">${t.name}</div><div class="sub">${fmtBR(t.start)} → ${fmtBR(t.end)} · ${t.notes||""}</div></div>
+      `;
+
+      const right = document.createElement("div");
+      right.className = "cellR";
+      right.style.width = widthPx + "px";
+
+      if(t.type === "ms"){
+        const m = document.createElement("div");
+        m.className = "ms";
+        m.style.left = left + "px";
+        right.appendChild(m);
+      }else{
+        const b = document.createElement("div");
+        b.className = "bar";
+        b.style.left = left + "px";
+        b.style.width = width + "px";
+        b.style.background = t.color;
+        right.appendChild(b);
+      }
+
+      row.appendChild(right);
+      sheetInner.appendChild(row);
+    });
+  }
+
+  function fitAll(){ viewStart=new Date("2025-12-20"); viewEnd=new Date("2026-05-03"); computeBounds();
+  render(); }
+  function fitJan(){ viewStart=new Date("2025-12-28"); viewEnd=new Date("2026-02-10"); render(); }
+  function fitPhase2(){ viewStart=new Date("2026-02-10"); viewEnd=new Date("2026-05-03"); render(); }
+  window.fitAll=fitAll; window.fitJan=fitJan; window.fitPhase2=fitPhase2;
+
+  render();
+</script>
+
+
+
+<section style="margin-top:34px">
+  <h2>Cronograma Financeiro – Resumo (principais desembolsos)</h2>
+  <div class="meta" style="margin-top:6px">
+    Observação: este cronograma financeiro lista apenas os eventos principais de desembolso. Alguns itens já foram adquiridos e, portanto, não aparecem nesta lista.
+  </div>
+  <div class="meta" style="margin-top:10px">
+    <span class="pill">Total geral: <b>R$ 7.825.800</b></span>
+  </div>
+
+  <table class="fin">
+    <tr><th>#</th><th>Categoria</th><th>Evento</th><th>Data de pagamento</th><th style="text-align:right">Valor</th><th>Observações</th></tr>
+    <tr><td>1</td><td>Estrutura metálica</td><td>Estrutura metálica – Parcela 1 de 3</td><td>29/12/2025</td><td style='text-align:right'>R$ 185.000</td><td>Parcela inicial para travar fornecimento</td></tr><tr><td>2</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 01/2026</td><td>05/01/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>3</td><td>Locações</td><td>Retroescavadeira (locação) – 01/2026</td><td>10/01/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>4</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 01/2026</td><td>10/01/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>5</td><td>Engenharia (serviço)</td><td>Serviços de engenharia – Triade Construtora (Parcela 1/3)</td><td>10/01/2026</td><td style='text-align:right'>R$ 200.000</td><td>Contrato de engenharia</td></tr><tr><td>6</td><td>Estrutura metálica</td><td>Estrutura metálica – Parcela 2 de 3</td><td>15/01/2026</td><td style='text-align:right'>R$ 245.000</td><td>Pagamento por avanço de fabricação</td></tr><tr><td>7</td><td>Equipamentos</td><td>Inversores Fase 1 (10 × 40k)</td><td>19/01/2026</td><td style='text-align:right'>R$ 400.000</td><td>100% antes da entrega</td></tr><tr><td>8</td><td>Painéis</td><td>Painéis Fase 2 (4.500 × 550) – pedido/pagamento</td><td>20/01/2026</td><td style='text-align:right'>R$ 2.475.000</td><td>Lead ~90 dias até chegada ao Brasil</td></tr><tr><td>9</td><td>Insumos elétricos</td><td>Cabos CC Fase 1</td><td>27/01/2026</td><td style='text-align:right'>R$ 150.000</td><td>Lead 7 dias</td></tr><tr><td>10</td><td>Mão de obra</td><td>MO – Jan/2026 (½ mês) + equipe especializada</td><td>31/01/2026</td><td style='text-align:right'>R$ 87.500</td><td>½ mês</td></tr><tr><td>11</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 02/2026</td><td>05/02/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>12</td><td>Equipamentos</td><td>Inversores Fase 2 (10 × 40k) – pedido/pagamento</td><td>10/02/2026</td><td style='text-align:right'>R$ 400.000</td><td>Lead ~90 dias (comprar jan/fev)</td></tr><tr><td>13</td><td>Locações</td><td>Retroescavadeira (locação) – 02/2026</td><td>10/02/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>14</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 02/2026</td><td>10/02/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>15</td><td>Engenharia (serviço)</td><td>Serviços de engenharia – Triade Construtora (Parcela 2/3)</td><td>10/02/2026</td><td style='text-align:right'>R$ 200.000</td><td>Contrato de engenharia</td></tr><tr><td>16</td><td>Estrutura metálica</td><td>Estrutura metálica – Parcela 3 de 3</td><td>15/02/2026</td><td style='text-align:right'>R$ 245.000</td><td>Contra aviso de embarque</td></tr><tr><td>17</td><td>Serviços especializados</td><td>Perfuração 900 furos (execução + mobilização)</td><td>16/02/2026 → 25/02/2026</td><td style='text-align:right'>R$ 29.000</td><td>Pagamento por medição</td></tr><tr><td>18</td><td>Equipamentos elétricos pesados</td><td>Trafo + QGBT Fase 2</td><td>20/02/2026</td><td style='text-align:right'>R$ 470.000</td><td>100% antes da entrega</td></tr><tr><td>19</td><td>Cercamento</td><td>Cercamento Fase 1</td><td>20/02/2026</td><td style='text-align:right'>R$ 200.000</td><td>Pagamento conforme contrato</td></tr><tr><td>20</td><td>Mão de obra</td><td>MO – 02/2026</td><td>28/02/2026</td><td style='text-align:right'>R$ 175.000</td><td>Mês cheio</td></tr><tr><td>21</td><td>Serviços especializados</td><td>Postes + cabos CA 34,8 kV – implantação</td><td>05/03/2026</td><td style='text-align:right'>R$ 75.000</td><td>Implantação MT</td></tr><tr><td>22</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 03/2026</td><td>05/03/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>23</td><td>Insumos civis</td><td>Brita – aquisição</td><td>10/03/2026</td><td style='text-align:right'>R$ 200.000</td><td>Compra em março</td></tr><tr><td>24</td><td>Insumos civis</td><td>Ferragens civis – bases de concreto</td><td>10/03/2026</td><td style='text-align:right'>R$ 25.000</td><td>Aço/ferragens bases</td></tr><tr><td>25</td><td>Locações</td><td>Retroescavadeira (locação) – 03/2026</td><td>10/03/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>26</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 03/2026</td><td>10/03/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>27</td><td>Engenharia (serviço)</td><td>Serviços de engenharia – Triade Construtora (Parcela 3/3)</td><td>10/03/2026</td><td style='text-align:right'>R$ 200.000</td><td>Contrato de engenharia</td></tr><tr><td>28</td><td>Insumos civis</td><td>Concreto usinado (pilares + bases)</td><td>12/03/2026</td><td style='text-align:right'>R$ 31.800</td><td>63,6 m³ @ R$ 500/m³</td></tr><tr><td>29</td><td>Serviços especializados</td><td>SPDA Fase 2</td><td>13/03/2026</td><td style='text-align:right'>R$ 200.000</td><td>SPDA Fase 2</td></tr><tr><td>30</td><td>Logística/guindaste</td><td>Guindaste – descarga de painéis (10 dias)</td><td>18/03/2026 → 27/03/2026</td><td style='text-align:right'>R$ 30.000</td><td>R$ 3.000/dia × 10</td></tr><tr><td>31</td><td>Mão de obra</td><td>MO – 03/2026</td><td>31/03/2026</td><td style='text-align:right'>R$ 175.000</td><td>Mês cheio</td></tr><tr><td>32</td><td>Insumos elétricos</td><td>Cabos CC Fase 2</td><td>05/04/2026</td><td style='text-align:right'>R$ 150.000</td><td>Lead 7 dias</td></tr><tr><td>33</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 04/2026</td><td>05/04/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>34</td><td>Cercamento</td><td>Cercamento Fase 2</td><td>10/04/2026</td><td style='text-align:right'>R$ 200.000</td><td>Pagamento em abril</td></tr><tr><td>35</td><td>Locações</td><td>Retroescavadeira (locação) – 04/2026</td><td>10/04/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>36</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 04/2026</td><td>10/04/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>37</td><td>Mão de obra</td><td>MO – 04/2026</td><td>30/04/2026</td><td style='text-align:right'>R$ 175.000</td><td>Mês cheio</td></tr><tr><td>38</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 05/2026</td><td>05/05/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>39</td><td>Locações</td><td>Retroescavadeira (locação) – 05/2026</td><td>10/05/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>40</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 05/2026</td><td>10/05/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>41</td><td>Mão de obra</td><td>MO – 05/2026</td><td>31/05/2026</td><td style='text-align:right'>R$ 175.000</td><td>Mês cheio</td></tr><tr><td>42</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 06/2026</td><td>05/06/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>43</td><td>Locações</td><td>Retroescavadeira (locação) – 06/2026</td><td>10/06/2026</td><td style='text-align:right'>R$ 25.000</td><td>R$ 25 mil/mês</td></tr><tr><td>44</td><td>Diversos/insumos</td><td>Diversos/insumos canteiro – 06/2026</td><td>10/06/2026</td><td style='text-align:right'>R$ 35.000</td><td>Diesel, alimentação, transporte, manutenções</td></tr><tr><td>45</td><td>Mão de obra</td><td>MO – 06/2026</td><td>30/06/2026</td><td style='text-align:right'>R$ 175.000</td><td>Mês cheio</td></tr><tr><td>46</td><td>Arrendamento (CAPEX)</td><td>Arrendamento do terreno – 07/2026</td><td>05/07/2026</td><td style='text-align:right'>R$ 15.000</td><td>Durante obra (CAPEX)</td></tr><tr><td>47</td><td>Mão de obra</td><td>MO – Jul/2026 (½ mês)</td><td>15/07/2026</td><td style='text-align:right'>R$ 87.500</td><td>½ mês</td></tr>
+  </table>
+
+  <h3 style="margin:16px 0 6px; font-size:13px">Subtotal por categoria</h3>
+  <table class="fin">
+    <tr><th>Categoria</th><th style="text-align:right">Subtotal</th></tr>
+    <tr><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 105.000</td></tr><tr><td>Cercamento</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>Diversos/insumos</td><td style='text-align:right'>R$ 210.000</td></tr><tr><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 600.000</td></tr><tr><td>Equipamentos</td><td style='text-align:right'>R$ 800.000</td></tr><tr><td>Equipamentos elétricos pesados</td><td style='text-align:right'>R$ 470.000</td></tr><tr><td>Estrutura metálica</td><td style='text-align:right'>R$ 675.000</td></tr><tr><td>Insumos civis</td><td style='text-align:right'>R$ 256.800</td></tr><tr><td>Insumos elétricos</td><td style='text-align:right'>R$ 300.000</td></tr><tr><td>Locações</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>Logística/guindaste</td><td style='text-align:right'>R$ 30.000</td></tr><tr><td>Mão de obra</td><td style='text-align:right'>R$ 1.050.000</td></tr><tr><td>Painéis</td><td style='text-align:right'>R$ 2.475.000</td></tr><tr><td>Serviços especializados</td><td style='text-align:right'>R$ 304.000</td></tr>
+    <tr><th>Total geral</th><th style="text-align:right">R$ 7.825.800</th></tr>
+  </table>
+</section>
+
+
+
+
+<section style="margin-top:34px">
+  <h2>Curva S financeira (acumulado)</h2>
+  <div class="meta" style="margin-top:6px">Acumulado mensal baseado nos eventos principais do cronograma financeiro (CAPEX).</div>
+  <div class="card" style="margin-top:10px">
+    <svg width="100%" viewBox="0 0 980 280" style="display:block">
+      <line x1='44' y1='44.0' x2='936' y2='44.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='92.0' x2='936' y2='92.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='140.0' x2='936' y2='140.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='188.0' x2='936' y2='188.0' stroke='rgba(255,255,255,.08)'/>
+<line x1='44' y1='236.0' x2='936' y2='236.0' stroke='rgba(255,255,255,.08)'/>
+      <polyline fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.4" points="44.0,231.5 171.4,142.3 298.9,98.3 426.3,73.5 553.7,58.8 681.1,52.6 808.6,46.5 936.0,44.0"/>
+      <circle cx='44.0' cy='231.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2025-12: R$ 185.000 (mês R$ 185.000)</title></circle><circle cx='171.4' cy='142.3' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-01: R$ 3.817.500 (mês R$ 3.632.500)</title></circle><circle cx='298.9' cy='98.3' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-02: R$ 5.611.500 (mês R$ 1.794.000)</title></circle><circle cx='426.3' cy='73.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-03: R$ 6.623.300 (mês R$ 1.011.800)</title></circle><circle cx='553.7' cy='58.8' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-04: R$ 7.223.300 (mês R$ 600.000)</title></circle><circle cx='681.1' cy='52.6' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-05: R$ 7.473.300 (mês R$ 250.000)</title></circle><circle cx='808.6' cy='46.5' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-06: R$ 7.723.300 (mês R$ 250.000)</title></circle><circle cx='936.0' cy='44.0' r='3.3' fill='rgba(255,255,255,.9)'><title>2026-07: R$ 7.825.800 (mês R$ 102.500)</title></circle>
+      <line x1="44" y1="44" x2="44" y2="236" stroke="rgba(255,255,255,.25)"/>
+      <line x1="44" y1="236" x2="936" y2="236" stroke="rgba(255,255,255,.25)"/>
+      <text x='44.0' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>12/2025</text>
+<text x='171.4' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>01/2026</text>
+<text x='298.9' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>02/2026</text>
+<text x='426.3' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>03/2026</text>
+<text x='553.7' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>04/2026</text>
+<text x='681.1' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>05/2026</text>
+<text x='808.6' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>06/2026</text>
+<text x='936.0' y='268' text-anchor='middle' font-size='11' fill='rgba(255,255,255,.65)'>07/2026</text>
+      <text x='10' y='236.0' font-size='11' fill='rgba(255,255,255,.65)'>0</text>
+<text x='10' y='188.0' font-size='11' fill='rgba(255,255,255,.65)'>1.956.450</text>
+<text x='10' y='140.0' font-size='11' fill='rgba(255,255,255,.65)'>3.912.900</text>
+<text x='10' y='92.0' font-size='11' fill='rgba(255,255,255,.65)'>5.869.350</text>
+<text x='10' y='44.0' font-size='11' fill='rgba(255,255,255,.65)'>7.825.800</text>
+    </svg>
+  </div>
+</section>
+
+
+<section style="margin-top:34px">
+  <h2>Desembolso mensal</h2>
+  <div class="meta" style="margin-top:6px">Base: eventos principais do cronograma financeiro (CAPEX). Valores agregados por mês.</div>
+  <table class="fin">
+    <tr><th>Mês</th><th style="text-align:right">Desembolso do mês</th><th style="text-align:right">Acumulado</th></tr>
+    <tr><td>12/2025</td><td style='text-align:right'>R$ 185.000</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td style='text-align:right'>R$ 3.632.500</td><td style='text-align:right'>R$ 3.817.500</td></tr><tr><td>02/2026</td><td style='text-align:right'>R$ 1.794.000</td><td style='text-align:right'>R$ 5.611.500</td></tr><tr><td>03/2026</td><td style='text-align:right'>R$ 1.011.800</td><td style='text-align:right'>R$ 6.623.300</td></tr><tr><td>04/2026</td><td style='text-align:right'>R$ 600.000</td><td style='text-align:right'>R$ 7.223.300</td></tr><tr><td>05/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.473.300</td></tr><tr><td>06/2026</td><td style='text-align:right'>R$ 250.000</td><td style='text-align:right'>R$ 7.723.300</td></tr><tr><td>07/2026</td><td style='text-align:right'>R$ 102.500</td><td style='text-align:right'>R$ 7.825.800</td></tr>
+  </table>
+  <h3 style="margin:16px 0 6px; font-size:13px">Detalhe por categoria (por mês)</h3>
+  <table class="fin">
+    <tr><th>Mês</th><th>Categoria</th><th style="text-align:right">Valor</th></tr>
+    <tr><td>12/2025</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 185.000</td></tr><tr><td>01/2026</td><td>Painéis</td><td style='text-align:right'>R$ 2.475.000</td></tr><tr><td>01/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>01/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>01/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>01/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>01/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>01/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>01/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>01/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>02/2026</td><td>Equipamentos elétricos pesados</td><td style='text-align:right'>R$ 470.000</td></tr><tr><td>02/2026</td><td>Equipamentos</td><td style='text-align:right'>R$ 400.000</td></tr><tr><td>02/2026</td><td>Estrutura metálica</td><td style='text-align:right'>R$ 245.000</td></tr><tr><td>02/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>02/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>02/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>02/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 29.000</td></tr><tr><td>02/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>02/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>03/2026</td><td>Serviços especializados</td><td style='text-align:right'>R$ 275.000</td></tr><tr><td>03/2026</td><td>Insumos civis</td><td style='text-align:right'>R$ 256.800</td></tr><tr><td>03/2026</td><td>Engenharia (serviço)</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>03/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>03/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>03/2026</td><td>Logística/guindaste</td><td style='text-align:right'>R$ 30.000</td></tr><tr><td>03/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>03/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>04/2026</td><td>Cercamento</td><td style='text-align:right'>R$ 200.000</td></tr><tr><td>04/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>04/2026</td><td>Insumos elétricos</td><td style='text-align:right'>R$ 150.000</td></tr><tr><td>04/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>04/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>04/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>05/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>05/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>05/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>05/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>06/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 175.000</td></tr><tr><td>06/2026</td><td>Diversos/insumos</td><td style='text-align:right'>R$ 35.000</td></tr><tr><td>06/2026</td><td>Locações</td><td style='text-align:right'>R$ 25.000</td></tr><tr><td>06/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr><tr><td>07/2026</td><td>Mão de obra</td><td style='text-align:right'>R$ 87.500</td></tr><tr><td>07/2026</td><td>Arrendamento (CAPEX)</td><td style='text-align:right'>R$ 15.000</td></tr>
+  </table>
+</section>
+
+</body>
+</html>
